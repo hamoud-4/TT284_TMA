@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Categories — Vought Hotel</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .page-header { padding:120px 6% 50px; border-bottom:1px solid var(--border); }
+  .page-header p { color:var(--muted); font-size:14px; margin-top:8px; max-width:460px; line-height:1.8; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; padding:50px 6% 80px; }
+  .cat-card { background:var(--white); border:1px solid var(--border); padding:36px 30px; cursor:pointer; text-decoration:none; display:block; transition:border-color 0.3s,transform 0.3s; }
+  .cat-card:hover { border-color:var(--gold); transform:translateY(-4px); }
+  .cat-num { font-family:'Playfair Display',serif; font-size:42px; color:#e5ddd0; line-height:1; margin-bottom:16px; }
+  .cat-icon { font-size:26px; margin-bottom:14px; }
+  .cat-card h3 { font-family:'Playfair Display',serif; font-size:20px; color:var(--text); margin-bottom:8px; }
+  .cat-card p { font-size:13px; color:var(--muted); line-height:1.8; margin-bottom:18px; }
+  .cat-link { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="../index.html">
+    <img src="../logo.png" alt="Vought Hotel Logo" style="width:34px;height:34px;object-fit:contain;">
+    
+    <div class="logo-text">Vought Hotels</div>
+  </a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="categories.html" class="active">Hotels</a></li>
+    <li><a href="../index.html#vision">Vision</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="label">Our Collection</div>
+  <h2>Hotel Categories</h2>
+  <div class="line"></div>
+  <p>Choose a category below to explore available rooms and make your reservation.</p>
+</div>
+
+<div class="grid">
+  <a class="cat-card" href="rooms.html?cat=luxury">
+    <div class="cat-num">01</div>
+    <div class="cat-icon">◈</div>
+    <h3>Luxury Hotels</h3>
+    <p>Iconic addresses where opulence meets impeccable service for travelers who demand the finest.</p>
+    <div class="cat-link">View Rooms →</div>
+  </a>
+  <a class="cat-card" href="rooms.html?cat=business">
+    <div class="cat-num">02</div>
+    <div class="cat-icon">◇</div>
+    <h3>Business Hotels</h3>
+    <p>Prime locations, fast connectivity, and executive amenities for the modern professional.</p>
+    <div class="cat-link">View Rooms →</div>
+  </a>
+  <a class="cat-card" href="rooms.html?cat=family">
+    <div class="cat-num">03</div>
+    <div class="cat-icon">○</div>
+    <h3>Family Hotels</h3>
+    <p>Spacious, safe, and full of fun — designed to create memories for every generation.</p>
+    <div class="cat-link">View Rooms →</div>
+  </a>
+  <a class="cat-card" href="rooms.html?cat=budget">
+    <div class="cat-num">04</div>
+    <div class="cat-icon">△</div>
+    <h3>Budget Hotels</h3>
+    <p>Smart and comfortable stays that prove great quality never has to break the bank.</p>
+    <div class="cat-link">View Rooms →</div>
+  </a>
+  <a class="cat-card" href="rooms.html?cat=beach">
+    <div class="cat-num">05</div>
+    <div class="cat-icon">☽</div>
+    <h3>Beach Resorts</h3>
+    <p>Wake up to ocean waves and coastal bliss at its most beautiful and serene.</p>
+    <div class="cat-link">View Rooms →</div>
+  </a>
+</div>
+
+<footer>
+  <div class="f-logo">Vought</div>
+  <p>© 2026 Vought Hotel. Developed by Ahmed Abdelaziz.</p>
+</footer>
+</body>
+</html>
