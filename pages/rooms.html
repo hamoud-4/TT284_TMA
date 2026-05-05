@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rooms — Vought Hotel</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .page-header { padding:110px 6% 40px; border-bottom:1px solid var(--border); }
+  .back { color:var(--gold); text-decoration:none; font-size:12px; letter-spacing:2px; text-transform:uppercase; display:inline-block; margin-bottom:20px; }
+  .back:hover { opacity:0.7; }
+  .rooms-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:50px 6% 80px; }
+  .room-card { background:var(--white); border:1px solid var(--border); transition:border-color 0.3s,transform 0.3s; }
+  .room-card:hover { border-color:var(--gold); transform:translateY(-4px); }
+  .room-img { width:100%; height:210px; object-fit:cover; display:block; }
+  .room-body { padding:26px; }
+  .room-body h3 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:8px; color:var(--text); }
+  .room-body p { font-size:13px; color:var(--muted); line-height:1.8; margin-bottom:14px; }
+  .feats { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+  .feat { font-size:11px; padding:3px 9px; border:1px solid var(--border); color:var(--muted); }
+  .room-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:16px; }
+  .price { font-family:'Playfair Display',serif; font-size:24px; color:var(--gold); }
+  .price span { font-size:12px; color:var(--muted); font-family:'Inter',sans-serif; }
+
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; place-items:center; }
+  .overlay.open { display:grid; }
+  .modal { background:var(--white); border:1px solid var(--border); width:min(560px,94vw); max-height:90vh; overflow-y:auto; }
+  .modal-head { padding:24px 28px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .modal-head h3 { font-family:'Playfair Display',serif; font-size:20px; }
+  .close-btn { background:none; border:1px solid var(--border); color:var(--text); width:32px; height:32px; cursor:pointer; font-size:15px; }
+  .close-btn:hover { border-color:var(--gold); color:var(--gold); }
+  .modal-body { padding:28px; }
+  .sel-room { display:flex; gap:14px; background:var(--bg); border:1px solid var(--border); padding:14px; margin-bottom:22px; }
+  .sel-room img { width:84px; height:66px; object-fit:cover; }
+  .sel-room h4 { font-family:'Playfair Display',serif; font-size:16px; color:var(--text); }
+  .sel-room .sp { color:var(--gold); font-size:13px; margin-top:4px; }
+  .fg { margin-bottom:12px; }
+  .fg label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:6px; }
+  .fg input, .fg select { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:10px 13px; font-family:'Inter',sans-serif; font-size:13px; outline:none; transition:border-color 0.3s; }
+  .fg input:focus, .fg select:focus { border-color:var(--gold); }
+  .fg select option { background:var(--white); }
+  .fgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .total-bar { display:flex; justify-content:space-between; align-items:center; background:var(--bg); border:1px solid var(--border); padding:18px; margin:18px 0; }
+  .tl { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .tn { font-size:11px; color:var(--muted); margin-top:2px; }
+  .ta { font-family:'Playfair Display',serif; font-size:30px; color:var(--gold); }
+
+  .success { display:none; text-align:center; padding:40px 28px; }
+  .tick { font-size:36px; color:var(--gold); }
+  .success h3 { font-family:'Playfair Display',serif; font-size:24px; margin:12px 0 6px; }
+  .success p { color:var(--muted); font-size:13px; }
+  .det { background:var(--bg); border:1px solid var(--border); padding:14px; margin:18px 0; text-align:left; font-size:13px; line-height:2; color:var(--muted); }
+  .hl { color:var(--gold); }
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="../index.html">
+    <img src="../logo.png" alt="Vought Hotel Logo" style="width:34px;height:34px;object-fit:contain;">
+    
+    <div class="logo-text">Vought Hotels</div>
+  </a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="categories.html" class="active">Hotels</a></li>
+    <li><a href="../index.html#vision">Vision</a></li>
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <a class="back" href="categories.html">← Back to Categories</a>
+  <div class="label" id="cat-label"></div>
+  <h2 id="cat-title"></h2>
+  <div class="line"></div>
+</div>
+
+<div class="rooms-grid" id="rooms-grid"></div>
+
+<div class="overlay" id="overlay" onclick="closeOut(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Reserve Room</h3>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Vought</div>
+  <p>© 2026 Vought Hotel. Developed by Ahmed Abdelaziz.</p>
+</footer>
+
+<script>
+const data={
+  luxury:{label:"Luxury Hotels",title:"Luxury Collection",rooms:[
+    {name:"Deluxe",img:"https://www.thelalit.com/wp-content/uploads/2024/10/DeluxeRoom-B.jpg",desc:"Panoramic views, private terrace, butler service, and bespoke interiors crafted for the elite traveler.",price:890,feats:["King Bed","Private Terrace","Butler Service","Jacuzzi"]},
+    {name:"Deluxe Triple",img:"https://hotelroyalhoian.vn/wp-content/uploads/2025/05/what-is-a-deluxe-room-8.jpg",desc:"Classic grandeur with marble floors, chandelier lighting, and Italian-crafted furniture throughout.",price:650,feats:["King Bed","Marble Bath","Room Service","City View"]}
+  ]},
+  business:{label:"Business Hotels",title:"Business <em>Rooms</em>",rooms:[
+    {name:"Executive Club Room",img:"https://m.ahstatic.com/is/image/accorhotels/HCM_P_00000007:3by2?fmt=jpg&op_usm=1.75,0.3,2,0&resMode=sharp2&iccEmbed=true&icc=sRGB&dpr=on,1.5&wid=335&hei=223&qlt=80",desc:"Ergonomic workspace, fiber WiFi, and Club Lounge access with complimentary breakfast included.",price:280,feats:["King Bed","Work Desk","Club Access","Breakfast"]}
+  ]},
+  family:{label:"Family Hotels",title:"Family <em>Rooms</em>",rooms:[
+    {name:"Family Suite",img:"https://hotelnikkobali-benoabeach.com/wp-content/uploads/2020/08/heroOVS-Premier-Family_Hotel-Nikko-Bali-2.jpg",desc:"Two connecting rooms with play corner and pool access. Kids under 12 stay free.",price:320,feats:["2 Rooms","Play Corner","Pool Access","Kids Meals"]}
+  ]},
+  budget:{label:"Budget Hotels",title:"Budget <em>Rooms</em>",rooms:[
+    {name:"Economy",img:"https://cf.bstatic.com/xdata/images/hotel/max1024x768/590717573.jpg?k=7fb40ef9f488208eeed1a466a6b80560bb38d202740794272325a8c99f918189&o=",desc:"Clean and comfortable — everything you need for a great night at the right price.",price:75,feats:["Double Bed","WiFi","A/C","Ensuite Bath"]},
+    {name:"Twin Room",img:"https://q-xx.bstatic.com/xdata/images/hotel/max500/505128660.jpg?k=cea8547f73f2a98d29477f96b97f8148560a84700659cd4b8e9c4eefef7a8c04&o=",desc:"Two beds, great city location. Perfect for friends or colleagues on a smart budget.",price:89,feats:["Twin Beds","WiFi","City View","Breakfast Option"]}
+  ]},
+  beach:{label:"Beach Resorts",title:"Beach <em>Rooms</em>",rooms:[
+    {name:"Sea View Suite",img:"https://www.hurghadaseagull.com/photos/rooms/_MG_1135%20%20%20copy_74e98_lg.jpg",desc:"Wake up to turquoise waters from a king bed with floor-to-ceiling ocean windows and balcony.",price:420,feats:["King Bed","Balcony","Pool Access","Sea View"]}
+  ]}
+};
+
+const cat=new URLSearchParams(location.search).get('cat')||'luxury';
+const d=data[cat];
+document.getElementById('cat-label').textContent=d.label;
+document.getElementById('cat-title').innerHTML=d.title;
+document.getElementById('rooms-grid').innerHTML=d.rooms.map((r,i)=>`
+  <div class="room-card">
+    <img class="room-img" src="${r.img}" alt="${r.name}" loading="lazy">
+    <div class="room-body">
+      <h3>${r.name}</h3><p>${r.desc}</p>
+      <div class="feats">${r.feats.map(f=>`<span class="feat">${f}</span>`).join('')}</div>
+      <div class="room-footer">
+        <div class="price">$${r.price} <span>/ night</span></div>
+        <button class="btn btn-gold" onclick="openRes(${i})">Reserve</button>
+      </div>
+    </div>
+  </div>`).join('');
+
+let cur=null;
+function openRes(i){
+  cur=d.rooms[i];
+  const today=new Date().toISOString().split('T')[0];
+  const tmr=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  document.getElementById('modal-body').innerHTML=`
+    <div id="rf">
+      <div class="sel-room"><img src="${cur.img}"><div><h4>${cur.name}</h4><div class="sp">$${cur.price}/night</div></div></div>
+      <div class="fgrid">
+        <div class="fg"><label>First Name</label><input id="fn" placeholder="Ahmed"></div>
+        <div class="fg"><label>Last Name</label><input id="ln" placeholder="Abdelaziz"></div>
+        <div class="fg"><label>Check-In</label><input type="date" id="ci" value="${today}" onchange="calc()"></div>
+        <div class="fg"><label>Check-Out</label><input type="date" id="co" value="${tmr}" onchange="calc()"></div>
+      </div>
+      <div class="fg"><label>Guests</label><select id="gs"><option>1 Guest</option><option selected>2 Guests</option><option>3 Guests</option><option>4 Guests</option></select></div>
+      <div class="total-bar"><div><div class="tl">Total</div><div class="tn" id="tn">1 night</div></div><div class="ta" id="ta">$${cur.price}</div></div>
+      <button class="btn btn-gold" style="width:100%" onclick="confirm()">Confirm Reservation</button>
+    </div>
+    <div class="success" id="sc">
+      <div class="tick">✓</div><h3>Confirmed!</h3><p>Your reservation is complete.</p>
+      <div class="det" id="det"></div>
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');calc();
+}
+function calc(){
+  const n=Math.max(1,Math.round((new Date(document.getElementById('co').value)-new Date(document.getElementById('ci').value))/86400000));
+  document.getElementById('tn').textContent=`${n} night${n>1?'s':''}`;
+  document.getElementById('ta').textContent=`$${(n*cur.price).toLocaleString()}`;
+}
+function confirm(){
+  const fn=document.getElementById('fn').value.trim(),ln=document.getElementById('ln').value.trim();
+  if(!fn||!ln){alert('Please enter your name.');return;}
+  const ci=document.getElementById('ci').value,co=document.getElementById('co').value,gs=document.getElementById('gs').value;
+  const n=Math.max(1,Math.round((new Date(co)-new Date(ci))/86400000));
+  document.getElementById('rf').style.display='none';
+  document.getElementById('sc').style.display='block';
+  document.getElementById('det').innerHTML=`Guest: <span class="hl">${fn} ${ln}</span><br>Room: <span class="hl">${cur.name}</span><br>Check-In: <span class="hl">${ci}</span><br>Check-Out: <span class="hl">${co}</span><br>Guests: <span class="hl">${gs}</span><br><strong>Total: <span class="hl">$${(n*cur.price).toLocaleString()}</span></strong>`;
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+function closeOut(e){if(e.target===document.getElementById('overlay'))closeModal();}
+</script>
+</body>
+</html>
